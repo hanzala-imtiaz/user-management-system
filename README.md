@@ -42,7 +42,7 @@ The **User Management System** is a simple web application designed for **securi
 3. **Set up environment variables:**
    Create a `.env` file in the root directory and add:
    ```env
-  MONGO_URI=mongodb+srv://your-username:your-password@cluster0.mongodb.net/
+   MONGO_URI=mongodb+srv://your-username:your-password@cluster0.mongodb.net/
    JWT_SECRET=your-secret-key
    ```
 
