@@ -1,0 +1,133 @@
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9fafb;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  color: #333;
+}
+
+h1 {
+  color: #2c3e50;
+  margin-bottom: 30px;
+  text-align: center;
+  font-size: 2rem;
+}
+
+form {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #4a4a4a;
+  font-weight: 600;
+}
+
+input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  font-size: 1rem;
+  color: #333;
+  background-color: #f9fafb;
+  transition: border-color 0.3s;
+}
+
+input:focus {
+  border-color: #4caf50;
+  outline: none;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+button {
+  background-color: #4caf50;
+  color: #ffffff;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+button:hover {
+  background-color: #45a049;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+button:focus {
+  outline: none;
+  box-shadow: 0 0 6px rgba(76, 175, 80, 0.5);
+}
+
+.links {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.links a {
+  color: #4caf50;
+  text-decoration: none;
+  font-weight: 600;
+  margin: 0 0.8rem;
+  transition: color 0.3s;
+}
+
+.links a:hover {
+  color: #388e3c;
+  text-decoration: underline;
+}
+
+.profile-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.profile-card {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 1.5rem;
+}
+
+.logout-btn {
+  display: inline-block;
+  background-color: #e74c3c;
+  color: #ffffff;
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.logout-btn:hover {
+  background-color: #c0392b;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.logout-btn:focus {
+  outline: none;
+  box-shadow: 0 0 6px rgba(231, 76, 60, 0.5);
+}
