@@ -4,7 +4,25 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const validator = require("validator");
 const router = express.Router();
-const logger = require("winston");
+const winston = require("winston");
+
+const failedLoginLogger = winston.createLogger({
+  level: "warn",
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.File({ 
+      filename: "auth-failures.log",
+      format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json()
+      )
+    })
+  ],
+});
+
 
 router.get("/signup", (req, res) => {
   res.render("signup");
@@ -36,10 +54,8 @@ router.post("/signup", async (req, res) => {
 
     const user = new User({ email, password });
     await user.save();
-    logger.info(`New user signed up: ${email}`);
     res.status(201).send("User created");
   } catch (error) {
-    logger.error(`Signup error: ${error.message}`);
     res.status(500).send("Error during signup");
   }
 });
@@ -62,34 +78,58 @@ router.get("/profile", authenticateToken, async (req, res) => {
     const user = await User.findById(req.user.id);
     res.render("profile", { user });
   } catch (error) {
-    logger.error(`Profile error: ${error.message}`);
     res.redirect("/api/auth/login");
   }
 });
+
+
+const getClientIP = (req) => {
+  let ip = req.headers['x-forwarded-for']?.split(',')[0] || req.socket.remoteAddress;
+
+  // If running on localhost (::1 or 127.0.0.1), get local network IP
+  if (ip === '::1' || ip === '127.0.0.1') {
+      const { networkInterfaces } = require('os');
+      const nets = networkInterfaces();
+      for (const name of Object.keys(nets)) {
+          for (const net of nets[name]) {
+              if (net.family === 'IPv4' && !net.internal) {
+                  ip = net.address; // Use the first non-internal IPv4 address
+                  break;
+              }
+          }
+      }
+  }
+  return ip;
+};
 
 // Update login route
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // Get the correct IP (works even if behind a proxy)
+    const clientIP = getClientIP(req);
+    console.log("Client IP:",clientIP);
+
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).send("Invalid email or password");
+        failedLoginLogger.warn(`Failed login attempt for non-existent user: ${email} from IP: ${clientIP}`);
+        return res.status(400).send("Invalid email or password");
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(400).send("Invalid email or password");
+        failedLoginLogger.warn(`Failed login attempt for user: ${email} from IP: ${clientIP}`);
+        return res.status(400).send("Invalid email or password");
     }
 
     const token = jwt.sign({ id: user._id }, "your-secret-key");
     res.cookie("token", token, { httpOnly: true });
-    logger.info(`User logged in: ${email}`);
     res.redirect("/api/auth/profile");
-  } catch (error) {
-    logger.error(`Login error: ${error.message}`);
+} catch (error) {
     res.status(500).send("Error during login");
-  }
+}
+
 });
 
 // Logout route
